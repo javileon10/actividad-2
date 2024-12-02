@@ -1,11 +1,5 @@
+creacion de directorios
 
-md C:\data\repl\n1 
-md C:\data\repl\n2 
-md C:\data\repl\n3 
-md C:\data\repl\n4 
-md C:\data\repl\n5 
-md C:\data\repl\n6 
-
-md C:\data\config\n1 
-md C:\data\config\n2 
-md C:\data\config\n3 
+c:\Users\leonr>md C:\data\repl\n1
+c:\Users\leonr>md C:\data\repl\n2
+c:\Users\leonr>md C:\data\repl\n3
