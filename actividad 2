@@ -3,3 +3,59 @@ creacion de directorios
 c:\Users\leonr>md C:\data\repl\n1
 c:\Users\leonr>md C:\data\repl\n2
 c:\Users\leonr>md C:\data\repl\n3
+
+Creación de nodos de replicas
+
+mongod --port 27017 --dbpath \data\repl\n1 --replSet rs0
+mongod --port 27018 --dbpath \data\repl\n2 --replSet rs0
+mongod --port 27019 --dbpath \data\repl\n3 --replSet rs0
+
+Adición de nodos secundarios desde el puerto 27017
+
+
+rs.add("192.168.0.18:27018")
+rs.add("192.168.0.18:27019")
+
+nombramiento a la base de datos
+
+Use Torneodeportivo
+
+Inicio de los servidores
+
+mongod --port 27022 --dbpath \data\config\n1 --configsvr --bind_ip 192.168.0.18
+mongod --port 27023 --dbpath \data\config\n2 --configsvr --bind_ip 192.168.0.18
+mongod --port 27024 --dbpath \data\config\n3 --configsvr --bind_ip 192.168.0.18
+
+Inicio del enrutador
+
+
+mongos --configdb 192.168.0.18:27022,192.168.0.18:27023,192.168.0.18:27024 --port  27021 --bind_ip 192.168.0.18
+
+
+Asignación de réplica inicial 
+
+mongo --port 27021 --host 192.168.0.18
+
+Creación de segundo:
+
+mongod --port 27013 --dbpath \data\repl\n4 --replSet rs1
+mongo --port 27013
+rs.initiate()
+mongod --port 27014 --dbpath \data\repl\n5 --replSet rs1
+mongod --port 27015 --dbpath \data\repl\n6 --replSet rs1
+
+Adición de réplica:
+
+
+sh.addShard("rs1\192.168.0.18:27013,192.168.0.18:27014,192.168.0.18:27015")
+sh.status()
+
+Distribución de colección desde enrutador:
+
+
+use torneodeportivo
+sh.enambleSharding("torneodeportivo")
+db.ensayo.createIndex({"_id":1})
+sh.shardCollection("torneodeportivo.ensayo",{"_id:1"}){ "collectionsharded" : "torneodeportivo.ensayo", "ok" : 1 }
+
+
